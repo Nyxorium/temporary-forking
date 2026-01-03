@@ -43,7 +43,7 @@ function HomeHeaderLayoutDesktopAndTablet({
 
   return (
     <>
-      {hasSession && (
+      {/* hasSession && (
         <Layout.Center>
           <View
             style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
@@ -62,6 +62,14 @@ function HomeHeaderLayoutDesktopAndTablet({
               style={[a.justify_center]}>
               <ButtonIcon icon={FeedsIcon} size="lg" />
             </Link>
+          </View>
+        </Layout.Center>
+      ) */}
+      {hasSession && (
+        <Layout.Center>
+          <View
+            style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
+            <View style={{width: 34}} />
           </View>
         </Layout.Center>
       )}

@@ -17,6 +17,10 @@ import {
   useLabelsOnMeDialogControl,
 } from '#/components/moderation/LabelsOnMeDialog'
 
+import {type ModerationDecision} from '@atproto/api'
+import {getModerationCauseKey, unique} from '#/lib/moderation'
+import * as Pills from '#/components/Pills'
+
 export function LabelsOnMe({
   type,
   labels,
@@ -76,6 +80,46 @@ export function LabelsOnMe({
         </ButtonText>
       </Button>
     </View>
+  )
+}
+
+// LabelsOnMeRevised can be removed if we don't put an appeal button there
+// ProfileHeaderAlerts does exactly what we want otherwise
+// makes things simmpler and less code doing the same stuff - Sunstar
+// (Wrong? Remove this comment later - Future Sunstar)
+export function LabelsOnMeRevised({
+  type,
+  labels,
+  moderation,
+  style,
+}: {
+  type: 'account' | 'content'
+  labels: ComAtprotoLabelDefs.Label[] | undefined
+  moderation: ModerationDecision
+  style?: StyleProp<ViewStyle>
+}) {
+  const modui = moderation.ui('profileView')
+  if (!modui.alert && !modui.inform) {
+    return null
+  }
+
+  return (
+    <Pills.Row size="lg" style={style}>
+      {modui.alerts.filter(unique).map(cause => (
+        <Pills.Label
+          size="lg"
+          key={getModerationCauseKey(cause)}
+          cause={cause}
+        />
+      ))}
+      {modui.informs.filter(unique).map(cause => (
+        <Pills.Label
+          size="lg"
+          key={getModerationCauseKey(cause)}
+          cause={cause}
+        />
+      ))}
+    </Pills.Row>
   )
 }
 

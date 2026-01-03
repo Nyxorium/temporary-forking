@@ -70,6 +70,7 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import * as bsky from '#/types/bsky'
+import {useDisableFollowbackBIN} from '#/state/preferences/disable-followback-BIN'
 
 const MAX_AUTHORS = 5
 
@@ -97,6 +98,7 @@ let NotificationFeedItem = ({
   const t = useTheme()
   const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const disableFollowbackBIN = useDisableFollowbackBIN()
   const itemHref = useMemo(() => {
     switch (item.type) {
       case 'post-like':
@@ -673,8 +675,8 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
-            (item.type === 'contact-match' &&
+            {(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack && !disableFollowbackBIN) ||
+            (item.type === 'contact-match' && // should disableFollowbackBIN be here too? - Sunstar
               !item.notification.author.viewer?.following) ? (
               <FollowBackButton profile={item.notification.author} />
             ) : null}

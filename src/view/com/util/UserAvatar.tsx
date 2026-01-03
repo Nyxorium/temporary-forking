@@ -54,7 +54,9 @@ import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import type * as bsky from '#/types/bsky'
+import * as bsky from '#/types/bsky'
+
+import {useEnableSquareAvatars} from '#/state/preferences/enable-square-avatars'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -224,10 +226,13 @@ let UserAvatar = ({
   noBorder,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
-  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
+  const enableSquareAvatars = useEnableSquareAvatars()
+  const prefSquareAvatars = enableSquareAvatars ? 'square' : 'circle'
+  const finalShape = overrideShape ?? (type === 'user' ? prefSquareAvatars : 'square')
 
   const aviStyle = useMemo(() => {
     let borderRadius
+    // Make labeler icons round in labels - Sunstar
     if (finalShape === 'square') {
       borderRadius = size > 32 ? 8 : 3
     } else {

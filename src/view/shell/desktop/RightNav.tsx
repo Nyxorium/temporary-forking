@@ -4,7 +4,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {
+  FEEDBACK_FORM_URL, 
+  HELP_DESK_URL,
+  TERMS_OF_SERVICE_URL,
+  PRIVACY_POLICY_URL,
+} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
@@ -98,10 +103,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {hasSession && (
           <>
             <InlineLinkText
-              to={FEEDBACK_FORM_URL({
-                email: currentAccount?.email,
-                handle: currentAccount?.handle,
-              })}
+              to={FEEDBACK_FORM_URL}
               label={_(msg`Feedback`)}>
               {_(msg`Feedback`)}
             </InlineLinkText>
@@ -109,13 +111,13 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </>
         )}
         <InlineLinkText
-          to="https://bsky.social/about/support/privacy-policy"
+          to={PRIVACY_POLICY_URL}
           label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         {' • '}
         <InlineLinkText
-          to="https://bsky.social/about/support/tos"
+          to={TERMS_OF_SERVICE_URL}
           label={_(msg`Terms`)}>
           {_(msg`Terms`)}
         </InlineLinkText>

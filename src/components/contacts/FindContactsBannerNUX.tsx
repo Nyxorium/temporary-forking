@@ -96,7 +96,7 @@ function useInternalState() {
     if (hidden) return false
     if (nux && nux.completed) return false
     if (!isFeatureEnabled) return false
-    if (gate('disable_settings_find_contacts')) return false
+    // if (gate('disable_settings_find_contacts')) return false
     return true
   }, [hidden, nux, isFeatureEnabled, gate])
 

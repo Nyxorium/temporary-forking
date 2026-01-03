@@ -60,6 +60,13 @@ import {VerificationCreatePrompt} from '#/components/verification/VerificationCr
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
+import {
+  LabelsOnMeDialog,
+  useLabelsOnMeDialogControl,
+} from '#/components/moderation/LabelsOnMeDialog'
+
+import {useAltLabelDisplayProfile} from '#/state/preferences/alternate-label-display-profile'
+
 let ProfileMenu = ({
   profile,
 }: {
@@ -80,6 +87,8 @@ let ProfileMenu = ({
   const verification = useFullVerificationState({profile})
   const canGoLive = useCanGoLive(currentAccount?.did)
 
+  const labels = profile.labels ?? []
+
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -91,6 +100,8 @@ let ProfileMenu = ({
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
   const goLiveDialogControl = useDialogControl()
   const addToStarterPacksDialogControl = useDialogControl()
+  const control = useLabelsOnMeDialogControl()
+  const useAltLabelDisplay = useAltLabelDisplayProfile()
 
   const showLoggedOutWarning = React.useMemo(() => {
     return (
@@ -454,8 +465,32 @@ let ProfileMenu = ({
               </Menu.Group>
             </>
           ) : null}
+          {isSelf &&
+          useAltLabelDisplay && 
+          labels.length > 0 ? (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                testID="profileHeaderDropdownListAddRemoveBtn"
+                label={_(msg`Appeal labels`)}
+                onPress={() => {
+                  control.open()
+                }}>
+                <Menu.ItemText>
+                  <Trans>Appeal labels</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={List} />
+              </Menu.Item>
+            </>
+          ) : null}
         </Menu.Outer>
       </Menu.Root>
+
+      <LabelsOnMeDialog 
+        control={control} 
+        labels={profile.labels || []} 
+        type={'account'} 
+      />
 
       <StarterPackDialog
         control={addToStarterPacksDialogControl}

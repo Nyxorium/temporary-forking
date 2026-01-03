@@ -45,9 +45,9 @@ import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/comp
 import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
-import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Contacts_Stroke2_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
+import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
@@ -94,6 +94,7 @@ export function SettingsScreen({}: Props) {
   const [showDevOptions, setShowDevOptions] = useState(false)
   const findContactsEnabled =
     useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  // const findContactsEnabled = false // Disabled for the time being - Sunstar
   const gate = useGate()
 
   return (
@@ -233,6 +234,12 @@ export function SettingsScreen({}: Props) {
               <Trans>Appearance</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          <SettingsList.LinkItem to="/settings/miscellaneous" label={_(msg`Miscellaneous`)}>
+            <SettingsList.ItemIcon icon={CodeLinesIcon} />
+            <SettingsList.ItemText>
+              <Trans>Miscellaneous</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/accessibility"
             label={_(msg`Accessibility`)}>
@@ -249,16 +256,6 @@ export function SettingsScreen({}: Props) {
               <Trans>Languages</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.PressableItem
-            onPress={() => Linking.openURL(HELP_DESK_URL)}
-            label={_(msg`Help`)}
-            accessibilityHint={_(msg`Opens helpdesk in browser`)}>
-            <SettingsList.ItemIcon icon={CircleQuestionIcon} />
-            <SettingsList.ItemText>
-              <Trans>Help</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
           <SettingsList.LinkItem to="/settings/about" label={_(msg`About`)}>
             <SettingsList.ItemIcon icon={BubbleInfoIcon} />
             <SettingsList.ItemText>

@@ -1,3 +1,9 @@
+# Extras
+/android.bak/
+command-of-interest.md
+*.bak
+empty
+
 # OSX
 #
 .DS_Store

@@ -81,7 +81,7 @@ export function SearchHistory({
 
         {searchHistory.length > 0 && (
           <View style={[a.px_lg, a.pt_sm]}>
-            {searchHistory.slice(0, 5).map((historyItem, index) => (
+            {searchHistory.slice(0, 10).map((historyItem, index) => ( // previously 0, 5, handles shown recent searches
               <View key={index} style={[a.flex_row, a.align_center]}>
                 <Pressable
                   accessibilityRole="button"

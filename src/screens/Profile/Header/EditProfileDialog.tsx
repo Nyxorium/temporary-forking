@@ -26,7 +26,9 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
+const PRONOUNS_MAX_GRAPHEMES = 20
 const DESCRIPTION_MAX_GRAPHEMES = 256
+// Check constants.ts, it exports the same values but are unused - Sunstar
 
 export function EditProfileDialog({
   profile,
@@ -112,6 +114,10 @@ function DialogInner({
   const [imageError, setImageError] = useState('')
   const initialDisplayName = profile.displayName || ''
   const [displayName, setDisplayName] = useState(initialDisplayName)
+  const initialPronouns = profile.pronouns || ''
+  const [pronouns, setPronouns] = useState(initialPronouns)
+  const initialWebsite = profile.website || ''
+  const [website, setWebsite] = useState(initialWebsite)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
@@ -130,6 +136,8 @@ function DialogInner({
   const dirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
+    pronouns !== initialPronouns ||
+    website !== initialWebsite ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
 
@@ -181,6 +189,8 @@ function DialogInner({
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
+          pronouns: pronouns.trimEnd(),
+          website: website.trimEnd(),
         },
         newUserAvatar,
         newUserBanner,
@@ -197,6 +207,8 @@ function DialogInner({
     control,
     displayName,
     description,
+    pronouns,
+    website,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -206,6 +218,10 @@ function DialogInner({
   const displayNameTooLong = isOverMaxGraphemeCount({
     text: displayName,
     maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
+  })
+  const pronounsTooLong = isOverMaxGraphemeCount({
+    text: pronouns,
+    maxCount: PRONOUNS_MAX_GRAPHEMES,
   })
   const descriptionTooLong = isOverMaxGraphemeCount({
     text: description,
@@ -239,7 +255,8 @@ function DialogInner({
           !dirty ||
           isUpdatingProfile ||
           displayNameTooLong ||
-          descriptionTooLong
+          descriptionTooLong ||
+          pronounsTooLong
         }
         size="small"
         color="primary"
@@ -260,6 +277,7 @@ function DialogInner({
       isUpdatingProfile,
       displayNameTooLong,
       descriptionTooLong,
+      pronounsTooLong,
     ],
   )
 
@@ -360,6 +378,35 @@ function DialogInner({
 
         <View>
           <TextField.LabelText>
+            <Trans>Pronouns</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={pronounsTooLong}>
+            <Dialog.Input
+              defaultValue={pronouns}
+              onChangeText={setPronouns}
+              label={_(msg`Pronouns`)}
+              placeholder={_(msg`e.g. They/Them`)}
+              testID="editPronounsInput"
+            />
+          </TextField.Root>
+          {pronounsTooLong && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_semi_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Plural
+                value={PRONOUNS_MAX_GRAPHEMES}
+                other="Max length exceeded. The maximum number of characters is #."
+              />
+            </Text>
+          )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
             <Trans>Description</Trans>
           </TextField.LabelText>
           <TextField.Root isInvalid={descriptionTooLong}>
@@ -387,6 +434,22 @@ function DialogInner({
             </Text>
           )}
         </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Website</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <Dialog.Input
+              defaultValue={website}
+              onChangeText={setWebsite}
+              label={_(msg`Website`)}
+              placeholder={_(msg`e.g. https://bsky.app`)}
+              testID="editWebsiteInput"
+            />
+          </TextField.Root>
+        </View>
+
       </View>
     </Dialog.ScrollableInner>
   )

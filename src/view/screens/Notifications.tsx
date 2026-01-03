@@ -39,6 +39,7 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import { useLimitComposePostButton } from '#/state/preferences/limit-compose-post-button'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -121,6 +122,8 @@ export function NotificationsScreen({}: Props) {
     isLoadingMentions,
   ])
 
+  const limitComposePostButton = useLimitComposePostButton();
+
   return (
     <Layout.Screen testID="notificationsScreen">
       <Layout.Header.Outer noBottomBorder sticky={false}>
@@ -159,14 +162,16 @@ export function NotificationsScreen({}: Props) {
           <View key={i}>{section.component}</View>
         ))}
       </Pager>
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
+      {!limitComposePostButton && (       
+        <FAB
+          testID="composeFAB"
+          onPress={() => openComposer({})}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      )}
     </Layout.Screen>
   )
 }

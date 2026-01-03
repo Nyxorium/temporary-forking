@@ -11,8 +11,11 @@ export const BSKY_SERVICE = 'https://bsky.social'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
-const HELP_DESK_LANG = 'en-us'
-export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+export const HELP_DESK_URL = `https://github.com/Nyxorium/Nyxo-Sky/discussions`
+export const FEEDBACK_FORM_URL = `https://github.com/Nyxorium/Nyxo-Sky/issues/new/choose`
+export const TERMS_OF_SERVICE_URL = 'https://nyxorium.github.io/NyxoSky-TOS/Terms.html'
+export const PRIVACY_POLICY_URL = 'https://nyxorium.github.io/NyxoSky-TOS/Terms.html'
+
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
@@ -37,24 +40,6 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:vjug55kidv6sye7ykr5faxxn': true, // emilyliu.me
   'did:plc:tgqseeot47ymot4zro244fj3': true, // iwsmith.bsky.social
   'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // darrin.bsky.team
-}
-
-const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
-export function FEEDBACK_FORM_URL({
-  email,
-  handle,
-}: {
-  email?: string
-  handle?: string
-}): string {
-  let str = BASE_FEEDBACK_FORM_URL
-  if (email) {
-    str += `?tf_anonymous_requester_email=${encodeURIComponent(email)}`
-    if (handle) {
-      str += `&tf_17205412673421=${encodeURIComponent(handle)}`
-    }
-  }
-  return str
 }
 
 export const MAX_DISPLAY_NAME = 64
