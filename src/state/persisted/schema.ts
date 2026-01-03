@@ -115,12 +115,14 @@ const schema = z.object({
     step: z.string(),
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
+  disabledLikes: z.array(z.string()).optional(), // Could be better named - Sunstar
   useInAppBrowser: z.boolean().optional(),
   /** @deprecated */
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
-  disableAutoplay: z.boolean().optional(),
+  disableVideoAutoplay: z.boolean().optional(),
+  disableGifAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
@@ -128,6 +130,38 @@ const schema = z.object({
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
   trendingVideoDisabled: z.boolean().optional(),
+
+  // Additional Settings in Nyxo Sky
+  limitComposePostButton: z.boolean().optional(),
+  altLabelDisplayProfile: z.boolean().optional(),
+
+  // Enable X settings in Nyxo Sky
+  enableShareViaDID: z.boolean().optional(),
+  enableSquareAvatars: z.boolean().optional(),
+
+  // Disable X settings in Nyxo Sky
+  disableSimilarAccounts: z.boolean().optional(),
+  disableFollowbackBIN: z.boolean().optional(),
+  disableShareViaDms: z.boolean().optional(),
+  disableFeedPromoTab: z.boolean().optional(),
+
+  disablePostsProfileTab: z.boolean().optional(),
+  disableRepliesProfileTab: z.boolean().optional(),
+  disableMediaProfileTab: z.boolean().optional(),
+  disableVideosProfileTab: z.boolean().optional(),
+  disableFeedsProfileTab: z.boolean().optional(),
+  disableStarterPacksProfileTab: z.boolean().optional(),
+  disableListsProfileTab: z.boolean().optional(),
+  // This looks like a bad solution, find an alternative - Sunstar
+  disablePostsProfileTab_self: z.boolean().optional(),
+  disableRepliesProfileTab_self: z.boolean().optional(),
+  disableMediaProfileTab_self: z.boolean().optional(),
+  disableVideosProfileTab_self: z.boolean().optional(),
+  disableLikesProfileTab_self: z.boolean().optional(),
+  disableFeedsProfileTab_self: z.boolean().optional(),
+  disableStarterPacksProfileTab_self: z.boolean().optional(),
+  disableListsProfileTab_self: z.boolean().optional(),
+
 })
 export type Schema = z.infer<typeof schema>
 
@@ -143,7 +177,11 @@ export const defaults: Schema = {
   },
   languagePrefs: {
     primaryLanguage: deviceLanguageCodes[0] || 'en',
-    contentLanguages: deviceLanguageCodes || [],
+    // contentLanguages: deviceLanguageCodes || [],
+    // Removed, having a default seems to not be great
+    // Especially in the early days
+    // Maybe make an onboarding step later - Sunstar
+    contentLanguages: [],
     postLanguage: deviceLanguageCodes[0] || 'en',
     postLanguageHistory: (deviceLanguageCodes || [])
       .concat(['en', 'ja', 'pt', 'de'])
@@ -165,16 +203,50 @@ export const defaults: Schema = {
     step: 'Home',
   },
   hiddenPosts: [],
+  disabledLikes: [],
   useInAppBrowser: undefined,
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
-  disableHaptics: false,
-  disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
+  disableHaptics: false, // Consider: default to true? (Test android behavior) - Sunstar
+  disableGifAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
+  disableVideoAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+
+  // Additional setting defaults in Nyxo Sky
+  limitComposePostButton: true,
+  altLabelDisplayProfile: false,
+
+  // Enable X setting defaults in Nyxo Sky
+  enableSquareAvatars: false,
+
+  // Disable X setting defaults in Nyxo Sky
+  disableSimilarAccounts: false,
+  disableFollowbackBIN: true,
+  disableShareViaDms: false,
+  enableShareViaDID: false,
+  disableFeedPromoTab: false,
+
+  disablePostsProfileTab: false,
+  disableRepliesProfileTab: false,
+  disableMediaProfileTab: false,
+  disableVideosProfileTab: false,
+  disableFeedsProfileTab: false,
+  disableStarterPacksProfileTab: false,
+  disableListsProfileTab: false,
+
+  disablePostsProfileTab_self: false,
+  disableRepliesProfileTab_self: false,
+  disableMediaProfileTab_self: false,
+  disableVideosProfileTab_self: false,
+  disableLikesProfileTab_self: false,
+  disableFeedsProfileTab_self: false,
+  disableStarterPacksProfileTab_self: false,
+  disableListsProfileTab_self: false,
+
 }
 
 export function tryParse(rawData: string): Schema | undefined {

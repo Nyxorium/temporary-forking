@@ -5,11 +5,22 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
-import {useAutoplayDisabled, useSetAutoplayDisabled} from '#/state/preferences'
+import {
+  useAutoplayDisabledPref,
+  useSetAutoplayDisabledPref,
+} from '#/state/preferences'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import { 
+  useLimitComposePostButton,
+  useSetLimitComposePostButton,
+ } from '#/state/preferences/limit-compose-post-button'
+import {
+  useSetSimilarAccountsDisabled,
+  useSimilarAccountsDisabled,
+} from '#/state/preferences/similar-accounts'
 import {
   useTrendingSettings,
   useTrendingSettingsApi,
@@ -22,6 +33,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
+import {PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
@@ -34,10 +46,15 @@ type Props = NativeStackScreenProps<
 >
 export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
-  const autoplayDisabledPref = useAutoplayDisabled()
-  const setAutoplayDisabledPref = useSetAutoplayDisabled()
+  const {videoAutoplayState, gifAutoplayState} = useAutoplayDisabledPref()
+  const {setVideoAutoplayDisabled, setGifAutoplayDisabled} =
+    useSetAutoplayDisabledPref()
+  const similarAccountsDisabledPref = useSimilarAccountsDisabled()
+  const setSimilarAccountsDisabledPref = useSetSimilarAccountsDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const limitComposePostButton = useLimitComposePostButton()
+  const setLimitComposePostButton = useSetLimitComposePostButton()
   const {enabled: trendingEnabled} = useTrendingConfig()
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
   const {setTrendingDisabled, setTrendingVideoDisabled} =
@@ -113,14 +130,27 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </Toggle.Item>
           )}
           <Toggle.Item
-            name="disable_autoplay"
-            label={_(msg`Autoplay videos and GIFs`)}
-            value={!autoplayDisabledPref}
-            onChange={value => setAutoplayDisabledPref(!value)}>
+            name="disable_video_autoplay"
+            label={_(msg`Autoplay videos`)}
+            value={!videoAutoplayState}
+            onChange={value => setVideoAutoplayDisabled(!value)}>
             <SettingsList.Item>
               <SettingsList.ItemIcon icon={PlayIcon} />
               <SettingsList.ItemText>
-                <Trans>Autoplay videos and GIFs</Trans>
+                <Trans>Autoplay videos</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
+          <Toggle.Item
+            name="disable_gif_autoplay"
+            label={_(msg`Autoplay GIFs`)}
+            value={!gifAutoplayState}
+            onChange={value => setGifAutoplayDisabled(!value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={PlayIcon} />
+              <SettingsList.ItemText>
+                <Trans>Autoplay GIFs</Trans>
               </SettingsList.ItemText>
               <Toggle.Platform />
             </SettingsList.Item>
@@ -177,6 +207,35 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               <SettingsList.Divider />
               <LiveEventFeedsSettingsToggle />
             </>
+          )}
+          <SettingsList.Divider />
+          <Toggle.Item
+            name="disable_similar_accounts"
+            label={_(msg`Similar Accounts`)}
+            value={!similarAccountsDisabledPref}
+            onChange={value => setSimilarAccountsDisabledPref(!value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={PersonPlusIcon} />
+              <SettingsList.ItemText>
+                <Trans>Similar Accounts Box</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
+          {isNative && (
+            <Toggle.Item
+              name="hide_new_post_button"
+              label={_(msg`Hide New Post button`)}
+              value={limitComposePostButton}
+              onChange={value => setLimitComposePostButton(value)}>
+              <SettingsList.Item>
+                <SettingsList.ItemIcon icon={WindowIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Hide New Post button</Trans>
+                </SettingsList.ItemText>
+                <Toggle.Platform />
+              </SettingsList.Item>
+            </Toggle.Item>
           )}
         </SettingsList.Container>
       </Layout.Content>

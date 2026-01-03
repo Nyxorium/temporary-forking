@@ -33,10 +33,10 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      name: 'Nyxo Sky',
+      slug: 'nyxosky',
+      scheme: 'nyxosky',
+      owner: 'Nyxo',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -175,14 +175,20 @@ module.exports = function (_config) {
         barStyle: 'light-content',
       },
       android: {
-        icon: './assets/app-icons/android_icon_default_next.png',
+        // icon: './assets/app-icons/android_icon_default_next.png',
+        icon: './assets/app-icons/nyxo-icon.png',
+        // adaptiveIcon: {
+        //   foregroundImage: './assets/icon-android-foreground.png',
+        //   monochromeImage: './assets/icon-android-monochrome.png',
+        //   backgroundColor: '#006AFF',
+        // },
         adaptiveIcon: {
-          foregroundImage: './assets/icon-android-foreground.png',
-          monochromeImage: './assets/icon-android-monochrome.png',
+          foregroundImage: './assets/app-icons/nyxo-icon.png',
           backgroundColor: '#006AFF',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'com.nyxo.app',
+        // versionCode: 1,
         intentFilters: [
           {
             action: 'VIEW',
@@ -328,12 +334,14 @@ module.exports = function (_config) {
              */
             default_light: {
               ios: './assets/app-icons/ios_icon_legacy_light.png',
-              android: './assets/app-icons/android_icon_legacy_light.png',
+              // android: './assets/app-icons/android_icon_legacy_light.png',
+              android: './assets/app-icons/nyxo-icon.png',
               prerendered: true,
             },
             default_dark: {
               ios: './assets/app-icons/ios_icon_legacy_dark.png',
-              android: './assets/app-icons/android_icon_legacy_dark.png',
+              // android: './assets/app-icons/android_icon_legacy_dark.png',
+              android: './assets/app-icons/nyxo-icon.png',
               prerendered: true,
             },
 

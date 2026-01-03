@@ -46,6 +46,7 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
+import { useLimitComposePostButton } from '#/state/preferences/limit-compose-post-button'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -501,6 +502,8 @@ export function FeedsScreen(_props: Props) {
     ],
   )
 
+  const limitComposePostButton = useLimitComposePostButton();
+
   return (
     <Layout.Screen testID="FeedsScreen">
       <Layout.Center>
@@ -543,7 +546,8 @@ export function FeedsScreen(_props: Props) {
         />
       </Layout.Center>
 
-      {hasSession && (
+      {hasSession && 
+      !limitComposePostButton && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}

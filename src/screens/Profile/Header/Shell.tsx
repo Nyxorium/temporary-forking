@@ -33,11 +33,13 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {LiveIndicator} from '#/components/live/LiveIndicator'
 import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
-import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
+import {LabelsOnMe, LabelsOnMeRevised} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
 import {StatusBarShadow} from './StatusBarShadow'
+import {useAltLabelDisplayProfile} from '#/state/preferences/alternate-label-display-profile'
+import {useEnableSquareAvatars} from '#/state/preferences/enable-square-avatars'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -61,6 +63,8 @@ let ProfileHeaderShell = ({
   const {top: topInset} = useSafeAreaInsets()
   const playHaptic = useHaptics()
   const liveStatusControl = useDialogControl()
+  const useAltLabelDisplay = useAltLabelDisplayProfile()
+  const enableSquareAvatars = useEnableSquareAvatars()
 
   const aviRef = useAnimatedRef()
   const bannerRef = useAnimatedRef<Animated.View>()
@@ -86,7 +90,7 @@ let ProfileHeaderShell = ({
             thumbUri: uri,
             thumbRect,
             dimensions:
-              type === 'circle-avi'
+              type === 'circle-avi' && enableSquareAvatars === false
                 ? {
                     // It's fine if it's actually smaller but we know it's 1:1.
                     height: 1000,
@@ -104,7 +108,7 @@ let ProfileHeaderShell = ({
         index: 0,
       })
     },
-    [openLightbox],
+    [openLightbox, enableSquareAvatars],
   )
 
   const isMe = useMemo(
@@ -201,7 +205,7 @@ let ProfileHeaderShell = ({
                     style={[
                       a.align_center,
                       a.justify_center,
-                      a.rounded_full,
+                      enableSquareAvatars ? a.rounded_md : a.rounded_full,
                       {
                         width: 31,
                         height: 31,
@@ -236,7 +240,22 @@ let ProfileHeaderShell = ({
       {children}
 
       {!isPlaceholderProfile &&
-        (isMe ? (
+        (isMe &&
+        useAltLabelDisplay ? (
+          <LabelsOnMeRevised
+            type="account"
+            labels={profile.labels}
+            moderation={moderation}
+            style={[
+              a.px_lg,
+              a.pt_xs,
+              a.pb_sm,
+              isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+            ]} // Check LabelsOnMe.tsx for more info
+          />
+        ) : 
+        isMe &&
+        !useAltLabelDisplay ? (
           <LabelsOnMe
             type="account"
             labels={profile.labels}
@@ -245,7 +264,7 @@ let ProfileHeaderShell = ({
               a.pt_xs,
               a.pb_sm,
               isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
-            ]}
+            ]} // Check LabelsOnMe.tsx for more info
           />
         ) : (
           <ProfileHeaderAlerts

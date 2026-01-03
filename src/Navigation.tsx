@@ -106,6 +106,8 @@ import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
+import {MiscellaneousSettingsScreen} from './screens/Settings/MiscellaneousSettings'
+import {ProfileTabVisibilitySettingsScreen} from './screens/Settings/ProfileTabsVisibility'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
@@ -383,6 +385,22 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => AccessibilitySettingsScreen}
         options={{
           title: title(msg`Accessibility Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="MiscellaneousSettings"
+        getComponent={() => MiscellaneousSettingsScreen}
+        options={{
+          title: title(msg`Miscellaneous Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ProfileTabVisibilitySettings"
+        getComponent={() => ProfileTabVisibilitySettingsScreen}
+        options={{
+          title: title(msg`Tab Visibility Settings`),
           requireAuth: true,
         }}
       />

@@ -269,6 +269,9 @@ function HomeScreenReady({
     )
   }
 
+  // On Andoid, this shows content between current and destination feeds
+  // Unlike iOS that does not do this... fix it? - Sunstar
+
   return hasSession ? (
     <Pager
       key={allFeeds.join(',')}

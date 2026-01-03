@@ -159,6 +159,7 @@ export function QrCodeInner({link}: {link: string}) {
         innerEyesOptions={{borderRadius: 3}}
         logo={{
           href: require('../../../assets/logo.png'),
+          // BlueSky logo - Sunstar
           ...(isWeb && {
             onChange: onLogoAreaChange,
             padding: 28,

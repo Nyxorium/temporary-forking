@@ -39,6 +39,7 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
+import {useLimitComposePostButton} from '#/state/preferences/limit-compose-post-button'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -138,6 +139,9 @@ export function FeedPage({
 
   const shouldPrefetch = isNative && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
+
+  const limitComposePostButton = useLimitComposePostButton();
+
   return (
     <View
       testID={testID}
@@ -171,7 +175,8 @@ export function FeedPage({
         />
       )}
 
-      {hasSession && (
+      {hasSession && 
+      !limitComposePostButton && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}

@@ -27,6 +27,8 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
+import {useDisableShareViaDms} from '#/state/preferences/disable-share-via-dms'
+import {useEnableShareViaDID} from '#/state/preferences/enable-share-by-DID'
 
 let ShareMenuItems = ({
   post,
@@ -38,9 +40,13 @@ let ShareMenuItems = ({
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
+  const disableShareViaDms = useDisableShareViaDms()
+  const enableShareViaDID = useEnableShareViaDID()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
+  // const postAuthor = (enableShareViaDID ? useProfileShadow(post.author) : useProfileShadow(post.author))
+  // Get post.author.did to work
 
   const href = useMemo(() => {
     const urip = new AtUri(postUri)
@@ -91,7 +97,7 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {hasSession && aa.state.access === aa.Access.Full && (
+        {hasSession && aa.state.access === aa.Access.Full && !disableShareViaDms && (
           <Menu.Group>
             <Menu.ContainerItem>
               <RecentChats postUri={postUri} />

@@ -54,6 +54,9 @@ import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
+import {useLimitComposePostButton} from '#/state/preferences/limit-compose-post-button'
+
+import {useProfileTabVisibilityPref} from '#/state/preferences/tabs-visibility-profiles'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -201,6 +204,25 @@ function ProfileScreenLoaded({
   const starterPacksSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
 
+  const {
+    postsProfileTab,
+    repliesProfileTab,
+    mediaProfileTab,
+    videosProfileTab,
+    feedsProfileTab,
+    starterPacksProfileTab,
+    listsProfileTab,
+
+    postsProfileTab_self,
+    repliesProfileTab_self,
+    mediaProfileTab_self,
+    videosProfileTab_self,
+    likesProfileTab_self,
+    feedsProfileTab_self,
+    starterPacksProfileTab_self,
+    listsProfileTab_self,
+  } = useProfileTabVisibilityPref()
+
   useSetTitle(combinedDisplayName(profile))
 
   const description = profile.description ?? ''
@@ -214,20 +236,31 @@ function ProfileScreenLoaded({
 
   const isMe = profile.did === currentAccount?.did
   const hasLabeler = !!profile.associated?.labeler
+
+  const prefPosts = isMe ? postsProfileTab_self : postsProfileTab
+  const prefReplies = isMe ? repliesProfileTab_self : repliesProfileTab
+  const prefMedia = isMe ? mediaProfileTab_self : mediaProfileTab
+  const prefVideos = isMe ? videosProfileTab_self : videosProfileTab
+  const prefLikes = isMe ? likesProfileTab_self : false
+  const prefFeeds = isMe ? feedsProfileTab_self : feedsProfileTab
+  const prefStarterPacks = isMe ? starterPacksProfileTab_self : starterPacksProfileTab
+  const prefLists = isMe ? listsProfileTab_self : listsProfileTab
+
   const showFiltersTab = hasLabeler
-  const showPostsTab = true
-  const showRepliesTab = hasSession
-  const showMediaTab = !hasLabeler
-  const showVideosTab = !hasLabeler
-  const showLikesTab = isMe
+  const showPostsTab = true && (prefPosts !== true)
+  const showRepliesTab = hasSession && (prefReplies !== true)
+  const showMediaTab = !hasLabeler && (prefMedia !== true)
+  const showVideosTab = !hasLabeler && (prefVideos !== true)
+  const showLikesTab = isMe && (prefLikes !== true)
   const feedGenCount = profile.associated?.feedgens || 0
-  const showFeedsTab = isMe || feedGenCount > 0
+  const showFeedsTab = (isMe || feedGenCount > 0) && (prefFeeds !== true)
   const starterPackCount = profile.associated?.starterPacks || 0
-  const showStarterPacksTab = isMe || starterPackCount > 0
+  const showStarterPacksTab = (isMe || starterPackCount > 0) && (prefStarterPacks !== true)
   // subtract starterpack count from list count, since starterpacks are a type of list
   const listCount = (profile.associated?.lists || 0) - starterPackCount
-  const showListsTab = hasSession && (isMe || listCount > 0)
+  const showListsTab = hasSession && (isMe || listCount > 0) && (prefLists !== true)
 
+  // Make these tabs optional in the same manner as metics - Sunstar
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
     showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
@@ -376,6 +409,8 @@ function ProfileScreenLoaded({
       </ExpoScrollForwarderView>
     )
   }
+
+  const limitComposePostButton = useLimitComposePostButton();
 
   return (
     <ScreenHider
@@ -582,7 +617,7 @@ function ProfileScreenLoaded({
             )
           : null}
       </PagerWithHeader>
-      {hasSession && (
+      {hasSession && (isMe || !limitComposePostButton) ? (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
@@ -591,7 +626,7 @@ function ProfileScreenLoaded({
           accessibilityLabel={_(msg`New post`)}
           accessibilityHint=""
         />
-      )}
+      ) : null}
     </ScreenHider>
   )
 }

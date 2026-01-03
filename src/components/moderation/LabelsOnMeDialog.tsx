@@ -295,6 +295,7 @@ function AppealForm({
             .
           </Trans>
         </Text>
+        { /* <Text> If you have multiple labels by this source, consider mentioning the label you want appealed as well. </Text> - Sunstar */}
       </View>
       {error && (
         <Admonition type="error" style={[a.mt_sm]}>
